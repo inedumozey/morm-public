@@ -13,6 +13,10 @@ import React, {
 } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
+import Images from "../components/Image";
+import { MdOutlineWbSunny } from "react-icons/md";
+import { FaMoon } from "react-icons/fa";
 
 const AppContext = createContext<any>({});
 
@@ -25,7 +29,6 @@ export default function ContextAPI({
 }) {
   const [doc, set_doc] = useState(doc_data?.data);
   const [error, set_error] = useState(doc_data?.error);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const data = { doc, removeDelineation };
 
@@ -44,13 +47,7 @@ export default function ContextAPI({
   ) : (
     <div>
       <AppContext.Provider value={data}>
-        <Layout
-          doc={doc}
-          setSidebarOpen={setSidebarOpen}
-          sidebarOpen={sidebarOpen}
-        >
-          {children}
-        </Layout>
+        <Layout doc={doc}>{children}</Layout>
       </AppContext.Provider>
     </div>
   );
@@ -69,82 +66,138 @@ function ErrorMsg({ msg }: { msg: string }) {
   );
 }
 
-function Layout({
-  doc,
-  setSidebarOpen,
-  sidebarOpen,
-  children,
-}: {
-  doc: any;
-  setSidebarOpen: any;
-  sidebarOpen: boolean;
-  children: React.ReactNode;
-}) {
-  let pathname = usePathname();
+function Layout({ doc, children }: { doc: any; children: ReactNode }) {
+  const { resolvedTheme } = useTheme();
+  const pathname = usePathname();
+  const scrollRef = React.useRef<HTMLDivElement | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  const doScroll = () => {
+    if (!scrollRef.current) return;
+
+    if (window.innerWidth < 768) {
+      scrollRef.current.scrollTo({
+        left: scrolled ? 0 : 250,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  // Trigger scroll on route change (only on smaller screen)
+  useEffect(() => {
+    if (window.innerWidth < 768) {
+      setScrolled(true);
+      doScroll();
+    }
+  }, [pathname]);
+
+  // Trigger when resizing below md
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setScrolled(true);
+        doScroll();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Toggle button
+  const toggleScroll = () => {
+    setScrolled((prev) => !prev);
+    setTimeout(doScroll, 50);
+  };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+    <div>
+      <div className="bg-pri flex w-full justify-between fixed top-0 left-0 right-0 h-[35px] items-center px-2 gap-2 z-[150]">
+        <div className="flex gap-2 items-center">
+          <div>
+            <Images src="images/rillbill.png" />
+          </div>
+          <div className="text-white text-lg">
+            <span className="font-extrabold ">Morm</span>
+            <span> / Docs</span>
+          </div>
+        </div>
+        <div className="">
+          {" "}
+          <ThemeToggleButton />
+        </div>
+      </div>
+
+      {/* Main */}
       <div
-        className={`fixed md:static left-0 top-0 h-full w-64 bg-white shadow-md z-50 transform transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        ref={scrollRef}
+        className={`pt-[35px] h-[100vh] overflow-y-hidden overflow-x-auto`}
       >
-        <div className="p-4 border-b">
-          <h1 className="text-xl font-bold">Morm Doc</h1>
-        </div>
-        <nav className="flex flex-col p-4 space-y-2">
-          <Link
-            href={`/`}
-            className={`uppercase text-pri ${
-              pathname == "/" ? "opacity-[1]" : "opacity-[.4]"
-            } text-sm font-bold`}
+        <div className="w-full h-[100%] relative translate-x-[250px] md:translate-x-0">
+          {/* sidebar */}
+          <div
+            className={`z-40 w-[250px] bg-bg transition h-full md:translate-x-0 translate-x-[-250px] overflow-hidden absolute top-0 bottom-0`}
           >
-            Home
-          </Link>
-          {doc?.map((doc: any, i: number) => {
-            return (
+            <nav className="flex flex-col p-4 space-y-2">
               <Link
-                key={i}
-                href={`/${removeDelineation(doc.title, " ", "-")}` || "#"}
-                onClick={() => setSidebarOpen(false)}
-                className={`uppercase text-pri ${
-                  removeDelineation(pathname, "-", " ") == `/${doc.title}`
-                    ? "opacity-[1]"
-                    : "opacity-[.4]"
-                } text-sm font-bold`}
+                href={`/`}
+                className={`uppercase text-pri hover:opacity-[.5] ${
+                  pathname == "/" ? "opacity-[1]" : "opacity-[.6]"
+                } text-sm font-bold cursor-pointer`}
               >
-                {doc.title}
+                Home
               </Link>
-            );
-          })}
-        </nav>
-      </div>
+              {doc?.map((doc: any, i: number) => {
+                return (
+                  <Link
+                    key={i}
+                    href={`/${removeDelineation(doc.title, " ", "-")}` || "#"}
+                    onClick={() => doScroll()}
+                    className={`cursor-pointer uppercase text-pri hover:opacity-[.5] ${
+                      removeDelineation(pathname, "-", " ") == `/${doc.title}`
+                        ? "opacity-[1]"
+                        : "opacity-[.6]"
+                    } text-sm font-bold`}
+                  >
+                    {doc.title}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
 
-      {/* Overlay for small screens */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-black opacity-30 z-40 md:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col w-full">
-        {/* Top bar */}
-        <div className="p-4 bg-white shadow flex items-center md:hidden">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-2xl p-1"
+          {/* Desktop Area: Constrained by TopFrame and SideFrame */}
+          <div
+            className={`relative bg-card transition md:pl-[250px] p-0 h-[100%] w-[100%] overflow-y-auto`}
           >
-            {sidebarOpen ? <FiX /> : <FiMenu />}
-          </button>
-          <h2 className="ml-4 text-lg font-bold">Morm Doc</h2>
+            <div
+              onClick={toggleScroll}
+              className="absolute md:hidden block top-[-3px] md:left-[248px] left-0 z-10 cursor-pointer"
+            >
+              <FiMenu size={24} className="text-pri font-extrabold" />
+            </div>
+            {children}
+          </div>
         </div>
-
-        {/* Content */}
-        <main className="p-4 overflow-auto flex-1">{children}</main>
       </div>
+    </div>
+  );
+}
+
+function ThemeToggleButton() {
+  const { resolvedTheme, setTheme } = useTheme();
+
+  return (
+    <div
+      title="Theme"
+      onClick={() => setTheme(resolvedTheme == "dark" ? "light" : "dark")}
+      className={`rounded-full cursor-pointer`}
+    >
+      {resolvedTheme == "dark" ? (
+        <MdOutlineWbSunny size={20} />
+      ) : (
+        <FaMoon size={20} />
+      )}
     </div>
   );
 }

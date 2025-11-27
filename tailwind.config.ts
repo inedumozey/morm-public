@@ -14,6 +14,7 @@ module.exports = {
         text: "var(--text)",
         text2: "var(--text2)",
         sec: "var(--sec)",
+        "active-nav": "var(----active-nav)",
         "sec-faded": "var(--sec-faded)",
         pri: "var(--pri)",
         "pri-faded": "var(--pri-faded)",

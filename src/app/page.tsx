@@ -1,44 +1,33 @@
 "use client";
 
 import React from "react";
-import { useAppContext } from "./context/ContextAPI";
-import "highlight.js/styles/github.css";
-import MarkdonPreview from "./context/MarkdonPreview";
 
 export default function page() {
-  const { doc } = useAppContext();
-
   return (
-    <div className="min-h-screen min-screen bg-card md:p-6 p-2">
-      <h1 className="title md:text-left text-center">
-        🚀 Meet MORM — The Lightweight Postgres SQL Object Relational Mapper,
-        Built for simplicity
-      </h1>
-      <p>
-        {" "}
+    <div className="min-h-screen pt-[50px] min-screen bg-card md:px-20 p-2">
+      <h1 className="title text-center">🚀 MORM Documentation</h1>
+      <div className="text-center text-text2 mt-[20px] mb-[30px]">
         Morm isn't just another ORM, it's a tool designed for developers who
         want simplicity without losing power. Instead of forcing you into rigid
         conventions or a heavy framework
-      </p>
-      <p>
-        <ul>
-          <div className="font-bold">Morm gives you:</div>
-          <li className="list-inside list-disc pl-4">Direct SQL control</li>
-          <li className="list-inside list-disc pl-4">
-            TypeScript-first workflow
-          </li>
-          <li className="list-inside list-disc pl-4">Auto-managed schemas</li>
-          <li className="list-inside list-disc pl-4">
-            Highly controlled relations
-          </li>
-          <li className="list-inside list-disc pl-4">
-            Simple and human-readable queries
-          </li>
-        </ul>
-      </p>
-      <p>No hidden magic</p>
-      <p>No unnecessary complexity</p>
-      <p>Just clear, intentional database control</p>
+      </div>
+
+      <div className="text-center text-[#ccc] flex flex-wrap justify-center">
+        <li className="list-inside list-disc pl-4">
+          TypeScript-first workflow
+        </li>
+        <li className="list-inside list-disc pl-4">Auto-managed schemas</li>
+        <li className="list-inside list-disc pl-4">
+          Highly controlled relations
+        </li>
+        <li className="list-inside list-disc pl-4">
+          Simple and human-readable queries
+        </li>
+        <li className="list-inside list-disc pl-4">No hidden magic</li>
+        <li className="list-inside list-disc pl-4">
+          No unnecessary complexity
+        </li>
+      </div>
     </div>
   );
 }

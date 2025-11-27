@@ -20,8 +20,8 @@ export default function page() {
   }, [title]);
 
   return (
-    <div className="md:p-6 p-2 bg-card">
-      <div className="title">
+    <div className="md:p-6 p-2">
+      <div className="title md:pt-6 pt-8">
         {content_title ? content_title : "Page Title"}
       </div>
 
