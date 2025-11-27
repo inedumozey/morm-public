@@ -44,6 +44,7 @@ html {
   line-height: 1.7;
   color: #111;
   width: 100%;
+  margin-bottom: 5px;
   padding: 1rem;
   @apply text-[0.9rem];
 }
