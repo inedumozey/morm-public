@@ -13,6 +13,7 @@ export class MormDocs {
   private async connect(dbUrl?: string) {
     this.client = new Client({
       connectionString: dbUrl || this.databaseUrl,
+      ssl: { rejectUnauthorized: false },
     });
     await this.client.connect();
   }
