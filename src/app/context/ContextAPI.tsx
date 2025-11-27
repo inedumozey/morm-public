@@ -1,4 +1,7 @@
 "use client";
+const removeDelineation = (text: string, remove: string, add: string) => {
+  return text && text.split(remove).join(add);
+};
 
 import { FiMenu, FiX } from "react-icons/fi";
 import React, {
@@ -24,7 +27,7 @@ export default function ContextAPI({
   const [error, set_error] = useState(doc_data?.error);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const data = { doc };
+  const data = { doc, removeDelineation };
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -56,7 +59,7 @@ export default function ContextAPI({
 function ErrorMsg({ msg }: { msg: string }) {
   return (
     <div className="h-screen w-screen flex flex-col justify-center items-center">
-      <div className="animate-bounce bg-red-faded text-red rounded-md px-[10px] text-xl">
+      <div className="animate-bounce text-center bg-red-faded text-red rounded-md px-[10px] text-xl">
         {msg || "Unknown error occurred"}
       </div>
       <div className="text-center my-[10px]">
@@ -77,7 +80,7 @@ function Layout({
   sidebarOpen: boolean;
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
+  let pathname = usePathname();
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -103,9 +106,12 @@ function Layout({
             return (
               <Link
                 key={i}
-                href={`/${doc.title}` || "#"}
+                href={`/${removeDelineation(doc.title, " ", "-")}` || "#"}
+                onClick={() => setSidebarOpen(false)}
                 className={`uppercase text-pri ${
-                  pathname == `/${doc.title}` ? "opacity-[1]" : "opacity-[.4]"
+                  removeDelineation(pathname, "-", " ") == `/${doc.title}`
+                    ? "opacity-[1]"
+                    : "opacity-[.4]"
                 } text-sm font-bold`}
               >
                 {doc.title}

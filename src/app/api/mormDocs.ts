@@ -36,7 +36,12 @@ export class MormDocs {
   /** Fetch all docs */
   async getDocs() {
     await this.connect();
-    const res = await this.query(`SELECT * FROM docs ORDER BY id ASC;`);
+    const res = await this.query(`
+      SELECT * FROM docs
+      WHERE is_deleted = false
+      ORDER BY id ASC;
+    `);
+
     await this.disconnect();
     return res.rows;
   }
