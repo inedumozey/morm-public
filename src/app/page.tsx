@@ -10,8 +10,9 @@ export default function page() {
 
   return (
     <div className="min-h-screen min-screen bg-card md:p-6 p-2">
-      <h1 className="title text-center">
-        🚀 Meet MORM — The Lightweight PostgreSQL ORM Built for Control
+      <h1 className="title md:text-left text-center">
+        🚀 Meet MORM — The Lightweight Postgres SQL Object Relational Mapper,
+        Built for simplicity
       </h1>
       <p>
         {" "}
