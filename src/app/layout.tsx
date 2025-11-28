@@ -49,7 +49,7 @@ export default async function RootLayout({
 }) {
   const doc_data = { error: "", data: [] };
   try {
-    const { data } = await api.get("/");
+    const { data } = await api.get("/fetch-docs");
 
     doc_data.data = data.data;
   } catch (err: any) {
