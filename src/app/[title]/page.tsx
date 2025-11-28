@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useAppContext } from "../context/ContextAPI";
-import MarkdonPreview from "../context/MarkdonPreview";
+import MarkdonPreview from "../components/MarkdonPreview";
 
 export default function page() {
   const { doc, removeDelineation } = useAppContext();
