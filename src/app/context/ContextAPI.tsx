@@ -131,7 +131,11 @@ function Layout({ doc, children }: { doc: any; children: ReactNode }) {
       <div className="bg-pri flex w-full justify-between fixed top-0 left-0 right-0 h-[35px] items-center px-2 gap-2 z-[150]">
         <div className="flex gap-2 items-center">
           <div>
-            <Images src="images/rillbill.png" />
+            <img
+              width={30}
+              height={30}
+              src="https://res.cloudinary.com/drmo/image/upload/v1764513540/rillbill/rillbill_w5mmxf.png"
+            />
           </div>
           <div className="text-white text-lg">
             <span className="font-extrabold ">Morm</span>
