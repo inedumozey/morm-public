@@ -17,23 +17,35 @@ import { useTheme } from "next-themes";
 import Images from "../components/Image";
 import { MdOutlineWbSunny } from "react-icons/md";
 import { FaMoon } from "react-icons/fa";
+import { api } from "@/services/api";
 
 const AppContext = createContext<any>({});
 
-export default function ContextAPI({
-  doc_data,
-  children,
-}: {
-  doc_data: any;
-  children: ReactNode;
-}) {
-  const [doc, set_doc] = useState(doc_data?.data);
-  const [error, set_error] = useState(doc_data?.error);
+export default function ContextAPI({ children }: { children: ReactNode }) {
+  const [doc, set_doc] = useState([]);
+  const [error, set_error] = useState("");
+  const [fetching, set_fetching] = useState(true);
+
+  async function fetchDocs() {
+    try {
+      const { data } = await api.get("/");
+      set_doc(data.data);
+    } catch (err: any) {
+      if (err.response) {
+        set_error(err.response.data.message);
+      } else {
+        set_error(err.message);
+      }
+    } finally {
+      set_fetching(false);
+    }
+  }
 
   const data = { doc, removeDelineation };
 
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
+    fetchDocs();
     setMounted(true);
   }, []);
 
@@ -42,7 +54,11 @@ export default function ContextAPI({
     return null;
   }
 
-  return error ? (
+  return fetching ? (
+    <div className="w-screen h-screen flex justify-center items-center">
+      Preparing...
+    </div>
+  ) : error ? (
     <ErrorMsg msg={error} />
   ) : (
     <div>

@@ -28,9 +28,8 @@ export const metadata: Metadata = {
     canonical: process.env.NEXT_PUBLIC_FRONTEND_URL,
   },
   openGraph: {
-    title: `Morm | EMR & Hospital Management System`,
-    description:
-      "Modern EMR and HMS built by a medical doctor and software developer to simplify patient care, records, and hospital workflows.",
+    title: `Morm`,
+    description: `MORM is a minimalist ORM for PostgreSQL, created with a single goal - Provide the simplest, cleanest, and most intuitive ORM experience for JavaScript/TypeScript developers`,
     url: process.env.NEXT_PUBLIC_FRONTEND_URL,
     siteName: "Morm",
     locale: "en_NG",
@@ -47,18 +46,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const doc_data = { error: "", data: [] };
-  try {
-    const { data } = await api.get("/");
+  // const doc_data = { error: "", data: [] };
+  // try {
+  //   const { data } = await api.get("/");
 
-    doc_data.data = data.data;
-  } catch (err: any) {
-    if (err.response) {
-      doc_data.error = err.response.data.message;
-    } else {
-      doc_data.error = err.message;
-    }
-  }
+  //   doc_data.data = data.data;
+  // } catch (err: any) {
+  //   if (err.response) {
+  //     doc_data.error = err.response.data.message;
+  //   } else {
+  //     doc_data.error = err.message;
+  //   }
+  // }
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -76,7 +75,7 @@ export default async function RootLayout({
       "@type": "Organization",
       name: "Morm",
       url: process.env.NEXT_PUBLIC_FRONTEND_URL,
-      // logo: `${process.env.NEXT_PUBLIC_FRONTEND_URL}}/images/logo.png`,
+      logo: `${process.env.NEXT_PUBLIC_FRONTEND_URL}}/images/rillbill.png`,
     },
   };
 
@@ -93,7 +92,7 @@ export default async function RootLayout({
       <body className="font-sans">
         <Toaster closeButton duration={8000} richColors />
         <ProgressProvider />
-        <ContextAPI doc_data={doc_data}>{children}</ContextAPI>
+        <ContextAPI>{children}</ContextAPI>
       </body>
     </html>
   );
