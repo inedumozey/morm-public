@@ -129,7 +129,7 @@ function Layout({ doc, children }: { doc: any; children: ReactNode }) {
   return (
     <div>
       <div className="bg-pri flex w-full justify-between fixed top-0 left-0 right-0 h-[35px] items-center px-2 gap-2 z-[150]">
-        <div className="flex gap-2 items-center">
+        <Link href="/" className="flex gap-2 items-center">
           <div>
             <img
               width={30}
@@ -141,7 +141,7 @@ function Layout({ doc, children }: { doc: any; children: ReactNode }) {
             <span className="font-extrabold ">Morm</span>
             <span> / Docs</span>
           </div>
-        </div>
+        </Link>
         <div className="">
           {" "}
           <ThemeToggleButton />
